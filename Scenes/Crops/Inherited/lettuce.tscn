@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://cj643lickbut8"]
+
+[ext_resource type="PackedScene" uid="uid://buv15h6bob366" path="res://Scenes/Crops/crop.tscn" id="1_xqawf"]
+[ext_resource type="Script" uid="uid://b7qxw4fbeymd1" path="res://Scenes/Crops/Inherited/Lettuce.cs" id="2_531b7"]
+
+[node name="Lettuce" instance=ExtResource("1_xqawf")]
+script = ExtResource("2_531b7")
+
+[node name="WaterState" parent="." index="0"]
+offset_left = -16.0
+offset_top = -16.0
+offset_right = 16.0
+offset_bottom = 16.0
+
+[node name="Sprite" parent="." index="1"]
+hframes = 6
+region_enabled = true
+region_rect = Rect2(0, 32, 192, 32)

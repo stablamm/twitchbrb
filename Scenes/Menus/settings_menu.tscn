@@ -1,0 +1,33 @@
+[gd_scene load_steps=4 format=3 uid="uid://cdkafb2lv5aqx"]
+
+[ext_resource type="PackedScene" uid="uid://bxqariw44fp0v" path="res://Scenes/UI/client_id_secret_ui.tscn" id="1_437ti"]
+[ext_resource type="Script" uid="uid://cgawuv62xwgkd" path="res://Scenes/Menus/SettingsMenu.cs" id="1_s1iiq"]
+[ext_resource type="PackedScene" uid="uid://0v7c6lgxmqlv" path="res://Scenes/UI/twitch_channel_connector_ui.tscn" id="2_s1iiq"]
+
+[node name="SettingsMenu" type="Node2D"]
+script = ExtResource("1_s1iiq")
+
+[node name="MainContainer" type="VBoxContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 459.0
+offset_top = 284.0
+offset_right = 1128.0
+offset_bottom = 549.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ClientIdSecretUI" parent="MainContainer" instance=ExtResource("1_437ti")]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="TwitchChannelConnectorUI" parent="MainContainer" instance=ExtResource("2_s1iiq")]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="BackButton" type="Button" parent="MainContainer"]
+layout_mode = 2
+text = "Back"
+
+[connection signal="pressed" from="MainContainer/BackButton" to="." method="OnBackButtonPressed"]

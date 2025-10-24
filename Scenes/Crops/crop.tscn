@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://buv15h6bob366"]
+
+[ext_resource type="Script" uid="uid://broywdq4f7cy6" path="res://Scenes/Crops/Crop.cs" id="1_1vkwo"]
+[ext_resource type="Texture2D" uid="uid://ce18q26m7sxj7" path="res://Assets/FarmSim/vectoraith_tileset_farmingsims_crops_32x32.png" id="2_1i0p8"]
+
+[node name="Crop" type="Node2D"]
+script = ExtResource("1_1vkwo")
+
+[node name="WaterState" type="ColorRect" parent="."]
+visible = false
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Sprite" type="Sprite2D" parent="."]
+position = Vector2(0, -13)
+texture = ExtResource("2_1i0p8")

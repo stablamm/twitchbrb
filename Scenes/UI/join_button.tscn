@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3 uid="uid://c1uqiu03ley6b"]
+
+[ext_resource type="Script" uid="uid://d3m0c2gx46pgx" path="res://Scenes/UI/JoinButton.cs" id="1_ka0b0"]
+
+[node name="JoinButton" type="Button"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -1468.0
+offset_bottom = -852.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Join"
+script = ExtResource("1_ka0b0")
+
+[connection signal="pressed" from="." to="." method="OnJoinButtonPress"]

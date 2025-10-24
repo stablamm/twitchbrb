@@ -1,0 +1,47 @@
+[gd_scene load_steps=3 format=3 uid="uid://dma13o4wc1873"]
+
+[ext_resource type="Script" uid="uid://bt6iw45om20fp" path="res://Scenes/MainMenu.cs" id="1_28flt"]
+[ext_resource type="PackedScene" uid="uid://dij628u2kmtha" path="res://Scenes/UI/status_bar.tscn" id="2_48xlc"]
+
+[node name="MainMenu" type="Node2D"]
+script = ExtResource("1_28flt")
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="Panel" type="Panel" parent="UI"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -237.75
+offset_top = -82.875
+offset_right = 237.75
+offset_bottom = 82.875
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="StartButton" type="Button" parent="UI/Panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Start"
+
+[node name="SettingsButton" type="Button" parent="UI/Panel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 70)
+layout_mode = 2
+size_flags_vertical = 3
+text = "Settings"
+
+[node name="StatusBar" parent="UI" instance=ExtResource("2_48xlc")]
+
+[connection signal="pressed" from="UI/Panel/VBoxContainer/StartButton" to="." method="OnStartButtonPressed"]
+[connection signal="pressed" from="UI/Panel/VBoxContainer/SettingsButton" to="." method="OnSettingsButtonPressed"]

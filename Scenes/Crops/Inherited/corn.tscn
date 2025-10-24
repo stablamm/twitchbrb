@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://cjxbffbeocsfe"]
+
+[ext_resource type="PackedScene" uid="uid://buv15h6bob366" path="res://Scenes/Crops/crop.tscn" id="1_upghj"]
+[ext_resource type="Script" uid="uid://c1wdo523uhigg" path="res://Scenes/Crops/Inherited/Corn.cs" id="2_wvmas"]
+
+[node name="Corn" instance=ExtResource("1_upghj")]
+script = ExtResource("2_wvmas")
+
+[node name="Sprite" parent="." index="1"]
+hframes = 4
+region_enabled = true
+region_rect = Rect2(128, 192, 128, 64)
