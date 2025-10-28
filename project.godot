@@ -17,13 +17,15 @@ config/icon="res://icon.svg"
 
 [autoload]
 
+TickManager="*res://Autoloads/TickManager.cs"
 TwitchAuthManager="*res://Autoloads/TwitchAuthManager.cs"
 SignalManager="*res://Autoloads/SignalManager.cs"
 TwitchChatManager="*res://Autoloads/TwitchChatManager.cs"
 TwitchCommandManager="*res://Autoloads/TwitchCommandManager.cs"
 TwitchConfigManager="*res://Autoloads/TwitchConfigManager.cs"
 CropManager="*res://Autoloads/CropManager.cs"
-TickManager="*res://Autoloads/TickManager.cs"
+QueueManager="*res://Autoloads/QueueManager.cs"
+StateManager="*res://Autoloads/StateManager.cs"
 
 [display]
 

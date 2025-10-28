@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3 uid="uid://ccsg2082k8qik"]
+
+[ext_resource type="Texture2D" uid="uid://bkm0c8lyuwt64" path="res://icon.svg" id="1_i27go"]
+[ext_resource type="Script" uid="uid://cbggr81fphnj0" path="res://Scenes/Farmer/Farmer.cs" id="1_yqco5"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_i27go"]
+size = Vector2(32, 32)
+
+[node name="Farmer" type="CharacterBody2D"]
+script = ExtResource("1_yqco5")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.24999999, 0.24999999)
+texture = ExtResource("1_i27go")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_i27go")

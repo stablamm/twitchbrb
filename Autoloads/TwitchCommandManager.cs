@@ -8,11 +8,15 @@ public partial class TwitchCommandManager : Node
 {
     public enum COMMAND_TYPE
     {
+        UNKNOWN,
         PLANT,
         WATER
     }
 
     public static TwitchCommandManager Instance;
+
+    private int _ticksBeforeAction= 2;
+    private int _currentTick = 0;
 
     public override void _Ready()
     {
@@ -22,21 +26,19 @@ public partial class TwitchCommandManager : Node
             SignalManager.SignalName.ChatMessageReceived,
             new Callable(this, nameof(OnChatCommandReceived))
         );
+
+        SignalManager.Instance.Connect(
+            SignalManager.SignalName.OnTick,
+            new Callable(this, nameof(OnTick))
+        );
     }
 
     public void OnChatCommandReceived(string user, string message)
     {
-        if (message.StartsWith("!plant"))
-        {
-            GD.Print($"{user} issued a plant command.");
-            //SignalManager.Instance.EmitPlantSeed();
-            SignalManager.Instance.EmitPlantSeedCommand(message);
-        }
-        else if (message.StartsWith("!water"))
-        {
-            GD.Print($"{user} issued a water command.");
-            SignalManager.Instance.EmitWaterCropCommand(message);
-        }
+        if (!message.StartsWith("!")) return; // All commands start with "!"
+        if (!IsValidCommand(message)) return; // Not a valid command
+
+        QueueManager.Instance.EnqueueCommand(message);
     }
 
     public T ParseCommand<T>(COMMAND_TYPE commandType, string command)
@@ -55,6 +57,47 @@ public partial class TwitchCommandManager : Node
 
         throw new InvalidCastException(
             $"Parsed command returns {result.GetType().Name}, not expected {typeof(T).Name}");
+    }
+
+    public COMMAND_TYPE GetCommandType(string command)
+    {
+        if (command.StartsWith("!plant"))
+            return COMMAND_TYPE.PLANT;
+        else if (command.StartsWith("!water"))
+            return COMMAND_TYPE.WATER;
+        else
+            return COMMAND_TYPE.UNKNOWN;
+    }
+
+    private bool IsValidCommand(string command)
+        => command.StartsWith("!plant") 
+            || command.StartsWith("!water");
+
+    private void OnTick()
+    {
+        if (StateManager.Instance.IsFarmerBusy)
+            return;
+
+        _currentTick++;
+        if (_currentTick < _ticksBeforeAction)
+            return;
+
+        //var command = QueueManager.Instance.DequeueCommand();
+        //if (string.IsNullOrEmpty(command))
+        //    return;
+
+        SignalManager.Instance.EmitRunNextCommand();
+        //var commandType = GetCommandType(command);
+        //if (commandType == COMMAND_TYPE.PLANT)
+        //{
+        //    SignalManager.Instance.EmitPlantSeedCommand(command);
+        //}
+        //else if (commandType == COMMAND_TYPE.WATER)
+        //{
+        //    SignalManager.Instance.EmitWaterCropCommand(command);
+        //}
+
+        _currentTick = 0;
     }
 
     private Vector2 ParsePlantCommand(string command)
@@ -93,6 +136,11 @@ public partial class TwitchCommandManager : Node
             // Convert to coordinates using your mapping methods
             MapLetterToCoordinate(letter, out int x);
             MapNumberToCoordinate(int.Parse(number), out int y);
+            
+            var outputPos = new Vector2(x, y);
+
+            if (outputPos.X > 16 || outputPos.Y > 10) // 16x10 grid limit
+                return Vector2.Zero; // Out of bounds
 
             return new Vector2(x, y);
         }

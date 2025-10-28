@@ -1,5 +1,4 @@
 using Godot;
-using System.Runtime.CompilerServices;
 using TwitchBrb.Autoloads;
 
 namespace TwitchBrb.Scenes.Worlds;
@@ -8,6 +7,8 @@ public partial class GardenWorld : Node2D
 {
     private int _farmWidth;
     private int _farmHeight;
+
+    [Export] public Farmer.Farmer TwitchFarmer;
 
     private FarmingMapLayer _farmingMapLayer;
 
@@ -33,6 +34,11 @@ public partial class GardenWorld : Node2D
             SignalManager.SignalName.WaterCropCommand,
             new Callable(this, nameof(OnWaterCropCommand))
         );
+
+        SignalManager.Instance.Connect(
+            SignalManager.SignalName.CommandRunNextCommand
+            , new Callable(this, nameof(OnRunNextCommand))
+        );
     }
 
     public override void _Input(InputEvent @event)
@@ -45,7 +51,8 @@ public partial class GardenWorld : Node2D
                 if (!isSoilTile) return;
 
                 PrintDebugData();
-                CropManager.Instance.GrowRandomCrop();
+                TwitchFarmer.MoveTo(_farmingMapLayer.GetGlobalMousePosition());
+
             }
         }
         else if (@event.IsAction("Spawn_Crop"))
@@ -99,6 +106,44 @@ public partial class GardenWorld : Node2D
         }
 
         WaterCrop(tileToWater);
+    }
+
+    public void OnRunNextCommand()
+    
+    {
+        if (QueueManager.Instance.CommandQueue.Count == 0) return;
+        var command = QueueManager.Instance.DequeueCommand();
+        if (string.IsNullOrEmpty(command)) return;
+
+        var nextPosition = TwitchCommandManager.Instance.ParseCommand<Vector2>(
+            TwitchCommandManager.Instance.GetCommandType(command),
+            command
+        );
+
+        if (nextPosition <= Vector2.Zero)
+        {
+            GD.PrintErr($"Invalid next position parsed from command: {command}");
+            return;
+        }
+
+        var offset = new Vector2(32, 64);
+        var nextPos = nextPosition * 32 * Scale;
+
+        TwitchFarmer.MoveTo(nextPos + offset);
+
+        //var commandType = TwitchCommandManager.Instance.GetCommandType(command);
+        //switch (commandType)
+        //{
+        //    case TwitchCommandManager.COMMAND_TYPE.PLANT:
+        //        OnPlantSeedCommand(command);
+        //        break;
+        //    case TwitchCommandManager.COMMAND_TYPE.WATER:
+        //        OnWaterCropCommand(command);
+        //        break;
+        //    default:
+        //        GD.PrintErr($"Unknown command type for command: {command}");
+        //        break;
+        //}
     }
 
     private void InitializeFarm()
@@ -183,5 +228,6 @@ public partial class GardenWorld : Node2D
     {
         GD.Print(_farmingMapLayer.GetMouseCell());
         GD.Print(CropManager.Instance.CropsByLocation[_farmingMapLayer.GetMouseCell()]);
+        GD.Print(GetGlobalMousePosition());
     }
 }

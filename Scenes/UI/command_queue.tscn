@@ -1,0 +1,18 @@
+[gd_scene load_steps=2 format=3 uid="uid://dvdnxnlfivpdr"]
+
+[ext_resource type="Script" uid="uid://cg3wg85mfp8xq" path="res://Scenes/UI/CommandQueue.cs" id="1_j0xxg"]
+
+[node name="CommandQueue" type="RichTextLabel"]
+offset_right = 96.0
+offset_bottom = 96.0
+script = ExtResource("1_j0xxg")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 49.0
+offset_bottom = 50.0
+grow_horizontal = 2
+grow_vertical = 2

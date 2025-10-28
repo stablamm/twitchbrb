@@ -1,8 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://dqo3oop2yoacr"]
+[gd_scene load_steps=6 format=3 uid="uid://dqo3oop2yoacr"]
 
 [ext_resource type="PackedScene" uid="uid://bxgxcv7thfb3b" path="res://Scenes/Worlds/garden_world.tscn" id="1_iikks"]
 [ext_resource type="PackedScene" uid="uid://dij628u2kmtha" path="res://Scenes/UI/status_bar.tscn" id="1_jlsdl"]
 [ext_resource type="PackedScene" uid="uid://curoe4hoewsaf" path="res://Scenes/UI/twitch_chat.tscn" id="2_d0kjy"]
+[ext_resource type="PackedScene" uid="uid://dvdnxnlfivpdr" path="res://Scenes/UI/command_queue.tscn" id="4_xutu3"]
+[ext_resource type="PackedScene" uid="uid://ccsg2082k8qik" path="res://Scenes/Farmer/farmer.tscn" id="5_iu4vh"]
 
 [node name="BrbScreen" type="Node2D"]
 
@@ -10,12 +12,24 @@
 
 [node name="StatusBar" parent="UI" instance=ExtResource("1_jlsdl")]
 
-[node name="GardenWorld" parent="." instance=ExtResource("1_iikks")]
+[node name="GardenWorld" parent="." node_paths=PackedStringArray("TwitchFarmer") instance=ExtResource("1_iikks")]
 position = Vector2(0, 32)
 scale = Vector2(2, 2)
+TwitchFarmer = NodePath("../Farmer")
 
-[node name="TwitchChat" parent="." instance=ExtResource("2_d0kjy")]
-offset_left = 1216.0
-offset_top = 32.0
-offset_right = 1600.0
-offset_bottom = 864.0
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+offset_left = 1221.0
+offset_top = 6.0
+offset_right = 1601.0
+offset_bottom = 900.0
+
+[node name="TwitchChat" parent="VBoxContainer" instance=ExtResource("2_d0kjy")]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="CommandQueue" parent="VBoxContainer" instance=ExtResource("4_xutu3")]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Farmer" parent="." instance=ExtResource("5_iu4vh")]
+position = Vector2(577, 824)

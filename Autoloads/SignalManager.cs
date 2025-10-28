@@ -11,6 +11,9 @@ public partial class SignalManager : Node
     [Signal] public delegate void WaterCropCommandEventHandler(string command);
     [Signal] public delegate void WaterCropEventHandler(Vector2 pos);
     [Signal] public delegate void OnTickEventHandler();
+    [Signal] public delegate void CommandQueuedEventHandler(string command);
+    [Signal] public delegate void CommandDequeuedEventHandler();
+    [Signal] public delegate void CommandRunNextCommandEventHandler();
 
     public override void _Ready()
     {
@@ -32,6 +35,11 @@ public partial class SignalManager : Node
         => EmitSignal(SignalName.WaterCropCommand, command);
     
     public void EmitWaterCrop(Vector2 pos) => EmitSignal(SignalName.WaterCrop, pos);
-    
     public void EmitTick() => EmitSignal(SignalName.OnTick);
+
+    public void EmitCommandQueued(string command) 
+        => EmitSignal(SignalName.CommandQueued, command);
+
+    public void EmitCommandDequeued() => EmitSignal(SignalName.CommandDequeued);
+    public void EmitRunNextCommand() => EmitSignal(SignalName.CommandRunNextCommand);
 }
