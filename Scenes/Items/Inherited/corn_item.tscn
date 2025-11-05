@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://r4xlo2j88fhb"]
+
+[ext_resource type="PackedScene" uid="uid://mkv3r2hwwj3v" path="res://Scenes/Items/crop_item.tscn" id="1_52rf2"]
+[ext_resource type="Script" uid="uid://cwgwgsfnq74yl" path="res://Scenes/Items/Inherited/CornItem.cs" id="2_3fnse"]
+
+[node name="CornItem" instance=ExtResource("1_52rf2")]
+script = ExtResource("2_3fnse")
+
+[node name="Sprite2D" parent="." index="0"]
+region_enabled = true
+region_rect = Rect2(224, 480, 32, 32)

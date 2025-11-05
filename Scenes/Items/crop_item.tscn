@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://mkv3r2hwwj3v"]
+
+[ext_resource type="Script" uid="uid://btlokv1k4n0i2" path="res://Scenes/Items/CropItem.cs" id="1_0fi2k"]
+[ext_resource type="Texture2D" uid="uid://cr0yvglj2ryns" path="res://Assets/FarmSim/vectoraith_32x32_iconset_farming.png" id="1_nwdu7"]
+
+[node name="CropItem" type="Node2D"]
+script = ExtResource("1_0fi2k")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_nwdu7")

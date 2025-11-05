@@ -23,6 +23,7 @@ public partial class Farmer : CharacterBody2D
             Velocity = Vector2.Zero;
             MoveAndSlide();
             StateManager.Instance.IsFarmerBusy = false;
+            SignalManager.Instance.EmitFarmerArrived();
             return;
         }
 

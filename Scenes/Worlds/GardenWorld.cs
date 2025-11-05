@@ -39,6 +39,11 @@ public partial class GardenWorld : Node2D
             SignalManager.SignalName.CommandRunNextCommand
             , new Callable(this, nameof(OnRunNextCommand))
         );
+
+        SignalManager.Instance.Connect(
+            SignalManager.SignalName.FarmerArrived,
+            new Callable(this, nameof(OnFarmerArrived))
+        );
     }
 
     public override void _Input(InputEvent @event)
@@ -112,7 +117,7 @@ public partial class GardenWorld : Node2D
     
     {
         if (QueueManager.Instance.CommandQueue.Count == 0) return;
-        var command = QueueManager.Instance.DequeueCommand();
+        var command = QueueManager.Instance.GetNextCommand();
         if (string.IsNullOrEmpty(command)) return;
 
         var nextPosition = TwitchCommandManager.Instance.ParseCommand<Vector2>(
@@ -131,19 +136,26 @@ public partial class GardenWorld : Node2D
 
         TwitchFarmer.MoveTo(nextPos + offset);
 
-        //var commandType = TwitchCommandManager.Instance.GetCommandType(command);
-        //switch (commandType)
-        //{
-        //    case TwitchCommandManager.COMMAND_TYPE.PLANT:
-        //        OnPlantSeedCommand(command);
-        //        break;
-        //    case TwitchCommandManager.COMMAND_TYPE.WATER:
-        //        OnWaterCropCommand(command);
-        //        break;
-        //    default:
-        //        GD.PrintErr($"Unknown command type for command: {command}");
-        //        break;
-        //}
+
+    }
+
+    public void OnFarmerArrived()
+    {
+        var command = QueueManager.Instance.DequeueCommand();
+        var commandType = TwitchCommandManager.Instance.GetCommandType(command);
+        
+        switch (commandType)
+        {
+            case TwitchCommandManager.COMMAND_TYPE.PLANT:
+                OnPlantSeedCommand(command);
+                break;
+            case TwitchCommandManager.COMMAND_TYPE.WATER:
+                OnWaterCropCommand(command);
+                break;
+            default:
+                GD.PrintErr($"Unknown command type for command: {command}");
+                break;
+        }
     }
 
     private void InitializeFarm()

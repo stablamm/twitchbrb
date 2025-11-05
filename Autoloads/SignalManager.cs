@@ -14,6 +14,7 @@ public partial class SignalManager : Node
     [Signal] public delegate void CommandQueuedEventHandler(string command);
     [Signal] public delegate void CommandDequeuedEventHandler();
     [Signal] public delegate void CommandRunNextCommandEventHandler();
+    [Signal] public delegate void FarmerArrivedEventHandler();
 
     public override void _Ready()
     {
@@ -42,4 +43,5 @@ public partial class SignalManager : Node
 
     public void EmitCommandDequeued() => EmitSignal(SignalName.CommandDequeued);
     public void EmitRunNextCommand() => EmitSignal(SignalName.CommandRunNextCommand);
+    public void EmitFarmerArrived() => EmitSignal(SignalName.FarmerArrived);
 }
