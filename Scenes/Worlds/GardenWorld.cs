@@ -1,5 +1,7 @@
 using Godot;
 using TwitchBrb.Autoloads;
+using TwitchBrb.Scenes.Crops;
+using TwitchBrb.Scenes.Items.Inherited;
 
 namespace TwitchBrb.Scenes.Worlds;
 
@@ -36,6 +38,11 @@ public partial class GardenWorld : Node2D
         );
 
         SignalManager.Instance.Connect(
+            SignalManager.SignalName.HarvestCropCommand,
+            new Callable(this, nameof(OnHarvestCropCommand))
+        );
+
+        SignalManager.Instance.Connect(
             SignalManager.SignalName.CommandRunNextCommand
             , new Callable(this, nameof(OnRunNextCommand))
         );
@@ -62,7 +69,7 @@ public partial class GardenWorld : Node2D
         }
         else if (@event.IsAction("Spawn_Crop"))
         {
-            var corn = CropManager.Instance.GetCrop<Corn>(CropManager.CROP_TYPE.CORN);
+            var corn = CropManager.Instance.GetCrop<Corn>(ICrop.CROP_TYPE.CORN);
             CropManager.Instance.GetRandomUnplantedLocation(out Vector2? target);
             
             if (target == null)
@@ -113,8 +120,23 @@ public partial class GardenWorld : Node2D
         WaterCrop(tileToWater);
     }
 
+    public void OnHarvestCropCommand(string command)
+    {
+        var tileToHarvest = TwitchCommandManager.Instance.ParseCommand<Vector2>(
+            TwitchCommandManager.COMMAND_TYPE.HARVEST,
+            command
+        );
+
+        if (tileToHarvest <= Vector2.Zero)
+        {
+            GD.PrintErr($"Unable to harvest at {tileToHarvest}. Out of bounds.");
+            return;
+        }
+
+        HarvestCrop(tileToHarvest);
+    }
+
     public void OnRunNextCommand()
-    
     {
         if (QueueManager.Instance.CommandQueue.Count == 0) return;
         var command = QueueManager.Instance.GetNextCommand();
@@ -135,8 +157,6 @@ public partial class GardenWorld : Node2D
         var nextPos = nextPosition * 32 * Scale;
 
         TwitchFarmer.MoveTo(nextPos + offset);
-
-
     }
 
     public void OnFarmerArrived()
@@ -151,6 +171,9 @@ public partial class GardenWorld : Node2D
                 break;
             case TwitchCommandManager.COMMAND_TYPE.WATER:
                 OnWaterCropCommand(command);
+                break;
+            case TwitchCommandManager.COMMAND_TYPE.HARVEST:
+                OnHarvestCropCommand(command);
                 break;
             default:
                 GD.PrintErr($"Unknown command type for command: {command}");
@@ -176,7 +199,7 @@ public partial class GardenWorld : Node2D
 
     private void PlantRandomCrop()
     {
-        var corn = CropManager.Instance.GetCrop<Corn>(CropManager.CROP_TYPE.CORN);
+        var corn = CropManager.Instance.GetCrop<Corn>(ICrop.CROP_TYPE.CORN);
         CropManager.Instance.GetRandomUnplantedLocation(out Vector2? target);
 
         if (target == null)
@@ -229,11 +252,28 @@ public partial class GardenWorld : Node2D
         var cropID = CropManager.Instance.CropsByLocation[pos];
         if (!string.IsNullOrEmpty(cropID)) return; // Already planted
 
-        var crop = CropManager.Instance.GetCrop<Corn>(CropManager.CROP_TYPE.CORN);
+        var crop = CropManager.Instance.GetCrop<Corn>(ICrop.CROP_TYPE.CORN);
         crop.Position = (Vector2)(pos * 32 + new Vector2(16, 16));
         AddChild(crop);
 
         CropManager.Instance.RegisterCropAtLocation(pos, crop);
+    }
+
+    private void HarvestCrop(Vector2 pos)
+    {
+        var cropID = CropManager.Instance.CropsByLocation[pos];
+        if (string.IsNullOrEmpty(cropID)) return; // No crop to harvest
+
+        var cropItem = CropManager.Instance.GetCropItem<CornItem>(ICrop.CROP_TYPE.CORN);
+        var crop = (Crop)CropManager.Instance.CropsByID[cropID];
+        
+        cropItem.Position = crop.Position;
+        crop.HarvestCrop();
+        
+        CropManager.Instance.CropsByLocation[pos] = string.Empty;
+        CropManager.Instance.CropsByID.Remove(cropID);
+
+        AddChild(cropItem);
     }
 
     private void PrintDebugData()

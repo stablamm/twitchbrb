@@ -9,6 +9,7 @@ public partial class SignalManager : Node
     [Signal] public delegate void PlantSeedEventHandler(); // Will always plant at a random location
     [Signal] public delegate void PlantSeedCommandEventHandler(string command);
     [Signal] public delegate void WaterCropCommandEventHandler(string command);
+    [Signal] public delegate void HarvestCropCommandEventHandler(string command);
     [Signal] public delegate void WaterCropEventHandler(Vector2 pos);
     [Signal] public delegate void OnTickEventHandler();
     [Signal] public delegate void CommandQueuedEventHandler(string command);
@@ -34,7 +35,10 @@ public partial class SignalManager : Node
     
     public void EmitWaterCropCommand(string command) 
         => EmitSignal(SignalName.WaterCropCommand, command);
-    
+
+    public void EmitHarvestCropCommand(string command) 
+        => EmitSignal(SignalName.HarvestCropCommand, command);
+
     public void EmitWaterCrop(Vector2 pos) => EmitSignal(SignalName.WaterCrop, pos);
     public void EmitTick() => EmitSignal(SignalName.OnTick);
 

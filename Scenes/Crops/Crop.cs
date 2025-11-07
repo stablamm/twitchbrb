@@ -8,6 +8,7 @@ public partial class Crop : Node2D, ICrop
     public string CropID { get; set; }
     public string CropName { get; set; }
     public CROP_STATE CropState { get; set; }
+    public CROP_TYPE CropType { get; set; }
     public Vector2 CropLocation { get; set; }
     public bool IsWatered { get; set; } = false;
 

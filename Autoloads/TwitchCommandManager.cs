@@ -10,7 +10,8 @@ public partial class TwitchCommandManager : Node
     {
         UNKNOWN,
         PLANT,
-        WATER
+        WATER,
+        HARVEST
     }
 
     public static TwitchCommandManager Instance;
@@ -47,6 +48,7 @@ public partial class TwitchCommandManager : Node
         {
             COMMAND_TYPE.PLANT => ParsePlantCommand(command),
             COMMAND_TYPE.WATER => ParseWaterCommand(command),
+            COMMAND_TYPE.HARVEST => ParseHarvestCommand(command),
             _ => throw new ArgumentException($"Unknown command type: {commandType}"),
         };
 
@@ -65,13 +67,16 @@ public partial class TwitchCommandManager : Node
             return COMMAND_TYPE.PLANT;
         else if (command.StartsWith("!water"))
             return COMMAND_TYPE.WATER;
+        else if (command.StartsWith("!harvest"))
+            return COMMAND_TYPE.HARVEST;
         else
             return COMMAND_TYPE.UNKNOWN;
     }
 
     private bool IsValidCommand(string command)
         => command.StartsWith("!plant") 
-            || command.StartsWith("!water");
+            || command.StartsWith("!water")
+            || command.StartsWith("!harvest");
 
     private void OnTick()
     {
@@ -82,20 +87,7 @@ public partial class TwitchCommandManager : Node
         if (_currentTick < _ticksBeforeAction)
             return;
 
-        //var command = QueueManager.Instance.DequeueCommand();
-        //if (string.IsNullOrEmpty(command))
-        //    return;
-
         SignalManager.Instance.EmitRunNextCommand();
-        //var commandType = GetCommandType(command);
-        //if (commandType == COMMAND_TYPE.PLANT)
-        //{
-        //    SignalManager.Instance.EmitPlantSeedCommand(command);
-        //}
-        //else if (commandType == COMMAND_TYPE.WATER)
-        //{
-        //    SignalManager.Instance.EmitWaterCropCommand(command);
-        //}
 
         _currentTick = 0;
     }
@@ -104,6 +96,9 @@ public partial class TwitchCommandManager : Node
         => ParseCoordinates(command);
 
     private Vector2 ParseWaterCommand(string command)
+        => ParseCoordinates(command);
+
+    private Vector2 ParseHarvestCommand(string command)
         => ParseCoordinates(command);
 
     private Vector2 ParseCoordinates(string command)

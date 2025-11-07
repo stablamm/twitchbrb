@@ -11,6 +11,7 @@ public partial class Corn : Crop
         base._Ready();
         CropID = Guid.NewGuid().ToString();
         CropName = "Corn";
+        CropType = ICrop.CROP_TYPE.CORN;
         CropState = ICrop.CROP_STATE.SEEDLING;
     }
 

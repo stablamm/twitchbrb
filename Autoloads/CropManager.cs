@@ -10,15 +10,15 @@ public partial class CropManager : Node
 {
     public static CropManager Instance;
 
-    public enum CROP_TYPE
-    {
-        CORN,
 
-    }
-
-    private Dictionary<CROP_TYPE, PackedScene> cropScenes = new Dictionary<CROP_TYPE, PackedScene>()
+    private Dictionary<ICrop.CROP_TYPE, PackedScene> cropScenes = new Dictionary<ICrop.CROP_TYPE, PackedScene>()
     {
-        { CROP_TYPE.CORN, GD.Load<PackedScene>("res://Scenes/Crops/Inherited/Corn.tscn") }
+        { ICrop.CROP_TYPE.CORN, GD.Load<PackedScene>("res://Scenes/Crops/Inherited/Corn.tscn") }
+    };
+
+    private Dictionary<ICrop.CROP_TYPE, PackedScene> CropItemScenes = new Dictionary<ICrop.CROP_TYPE, PackedScene>()
+    {
+        { ICrop.CROP_TYPE.CORN, GD.Load<PackedScene>("res://Scenes/Items/Inherited/corn_item.tscn") }
     };
 
     // Key: Map Location (Vector2), Value: CropID (string)
@@ -32,7 +32,7 @@ public partial class CropManager : Node
         Instance = this;
     }
 
-    public T GetCrop<T>(CROP_TYPE cropType) where T : Node2D
+    public T GetCrop<T>(ICrop.CROP_TYPE cropType) where T : Node2D
     {
         if (cropScenes.ContainsKey(cropType))
         {
@@ -43,6 +43,20 @@ public partial class CropManager : Node
         else
         {
             throw new ArgumentException($"Crop type {cropType} not found.");
+        }
+    }
+
+    public T GetCropItem<T>(ICrop.CROP_TYPE cropType) where T : Node2D
+    {
+        if (CropItemScenes.ContainsKey(cropType))
+        {
+            var cropItemScene = CropItemScenes[cropType];
+            var cropItemInstance = cropItemScene.Instantiate<T>();
+            return cropItemInstance;
+        }
+        else
+        {
+            throw new ArgumentException($"Crop item type {cropType} not found.");
         }
     }
 
@@ -110,7 +124,7 @@ public partial class CropManager : Node
         }
         var randomIndex = GD.Randi() % grownCrops.Count;
         var crop = grownCrops[(int)randomIndex];
-        if (crop is Scenes.Crops.Crop concreteCrop)
+        if (crop is Crop concreteCrop)
         {
             concreteCrop.GrowStage();
         }
